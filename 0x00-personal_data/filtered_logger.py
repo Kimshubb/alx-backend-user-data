@@ -3,14 +3,6 @@
 '''
 import re
 
-patterns = {
-    'extract': lambda x, y: r'(?P<field>{})=[^{}]*'.format('|'.join(x), y),
-    'replace': lambda x: r'\g<field>={}'.format(x),
-}
-
-
 def filter_datum(fields, redaction, message, separator):
-    '''obfuscate log messages
-    '''
-    extract, replace = (patterns["extract"], patterns["replace"])
-    return re.sub(extract(fields, separator), replace(redaction), message)
+    pattern = '|'.join([f'{field}=[^"{separator}]*' for field in fields])
+    return re.sub(pattern, lambda match: re.sub('=[^"{separator}]*', f'={redaction}', match.group()), message)
