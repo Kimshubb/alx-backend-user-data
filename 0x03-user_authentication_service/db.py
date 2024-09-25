@@ -51,6 +51,6 @@ class DB:
             if key not in User.__dict__:
                 raise InvalidRequestError
             for user in all_users:
-                if getattr(user, key) = value:
+                if getattr(user, key) == value:
                     return user
         raise NoResultFound
