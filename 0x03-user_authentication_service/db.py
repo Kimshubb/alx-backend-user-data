@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """DB module
 """
 from sqlalchemy import create_engine
@@ -40,4 +41,16 @@ class DB:
         self._session.add(user)
         self._session.commit()
         return user
-        
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+        Returns a user from db who has similar attributes as passed args
+        """
+        all_users = self._session.query(User)
+        for key, value in kwargs.items():
+            if key not in User.__dict__:
+                raise InvalidRequestError
+            for user in all_users:
+                if getattr(user, key) = value:
+                    return user
+        raise NoResultFound
