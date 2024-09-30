@@ -38,12 +38,18 @@ class DB:
             hashed_password(str) : password hashed using bcrypt
         Return: Newly created user object
         """
-        user = User(email=email, hashed_password=hashed_password)
+        new_user = User(email=email, hashed_password=hashed_password)
         session = self._session
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-        return user
+        try:
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+
 
     def find_user_by(self, **kwargs) -> User:
         """
