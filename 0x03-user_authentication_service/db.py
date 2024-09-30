@@ -31,7 +31,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
     
-    def add_user(self, email:str, hashed_password:str) -> User:
+    def add_user(self, email: str, hashed_password: str) -> User:
         """
         Create a user object and sava it to db
         Args: Email (str)
@@ -42,6 +42,7 @@ class DB:
         session = self._session
         session.add(user)
         session.commit()
+        session.refresh(user)
         return user
 
     def find_user_by(self, **kwargs) -> User:
