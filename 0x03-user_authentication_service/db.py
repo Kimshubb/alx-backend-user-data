@@ -55,11 +55,11 @@ class DB:
         """
         Returns a user from db who has similar attributes as passed args
         """
-        all_users = self._session.query(User)
-        for key, value in kwargs.items():
-            if key not in User.__dict__:
-                raise InvalidRequestError
-            for user in all_users:
-                if getattr(user, key) == value:
-                    return user
-        raise NoResultFound
+        session = self._session
+        try:
+            user = session.query(User).filter_by(**kwargs).one()
+        except NoResultFound as e:
+            raise NoResultFound(f"No user found for {kwargs}") from e
+        except InvalidRequestError as e:
+            raise InvalidRquestError(f"Invalid query arguments: {kwargs}") from e
+        return user
